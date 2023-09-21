@@ -1,0 +1,167 @@
+[gd_scene load_steps=24 format=3 uid="uid://c0a3y1nmmq3ry"]
+
+[ext_resource type="Script" path="res://data/scripts/camera.gd" id="1_0htb1"]
+[ext_resource type="Material" uid="uid://dv3x8ocqr14yt" path="res://data/materials/sky.material" id="1_dtpuj"]
+[ext_resource type="Script" path="res://data/scripts/debug.gd" id="2_02dep"]
+[ext_resource type="Script" path="res://data/scripts/chunk.gd" id="2_dhg3x"]
+[ext_resource type="Script" path="res://data/scripts/character.gd" id="4_buec5"]
+[ext_resource type="PackedScene" uid="uid://cyyvvmqkpksdo" path="res://data/models/cube.glb" id="5_hxctm"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_r8kv3"]
+frequency = 0.001
+fractal_octaves = 2
+fractal_lacunarity = 4.202
+fractal_gain = 0.302
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cgye5"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_r8kv3")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_wph53"]
+frequency = 0.001
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ldna3"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_wph53")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0q7g1"]
+noise_type = 0
+frequency = 0.003
+fractal_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lvtxr"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_0q7g1")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bgwes"]
+frequency = 0.001
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jljhh"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_bgwes")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_hpir3"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_26ja0"]
+seamless = true
+seamless_blend_skirt = 1.0
+noise = SubResource("FastNoiseLite_hpir3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38ij6"]
+transparency = 1
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.180392, 0.407843, 0.501961, 0.768627)
+refraction_scale = 0.01
+refraction_texture = SubResource("NoiseTexture2D_26ja0")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_facfa"]
+material = SubResource("StandardMaterial3D_38ij6")
+size = Vector2(5000, 5000)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_v7aaa"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3b43"]
+albedo_color = Color(1, 0.192157, 0.482353, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_0quuj"]
+material = SubResource("StandardMaterial3D_q3b43")
+radius = 0.2
+height = 0.4
+
+[sub_resource type="Sky" id="Sky_nqcl1"]
+sky_material = ExtResource("1_dtpuj")
+
+[sub_resource type="Environment" id="Environment_of70n"]
+background_mode = 2
+sky = SubResource("Sky_nqcl1")
+sdfgi_use_occlusion = true
+volumetric_fog_albedo = Color(0.00392157, 0.537255, 0.866667, 1)
+volumetric_fog_emission = Color(0.00392157, 0.537255, 0.866667, 1)
+
+[node name="main" type="Node"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Chunk" type="Node3D" parent="."]
+script = ExtResource("2_dhg3x")
+generateWorld = true
+
+[node name="Chunks" type="Node3D" parent="Chunk"]
+
+[node name="Noises" type="Node" parent="Chunk"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 64)
+texture = SubResource("NoiseTexture2D_cgye5")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 144)
+texture = SubResource("NoiseTexture2D_ldna3")
+
+[node name="Lake" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 224)
+texture = SubResource("NoiseTexture2D_lvtxr")
+
+[node name="Sprite2D4" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 304)
+texture = SubResource("NoiseTexture2D_jljhh")
+
+[node name="debug" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_02dep")
+
+[node name="fps" type="Label" parent="debug"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 77.0
+offset_bottom = 33.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 20
+
+[node name="water" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6, 0)
+visible = false
+mesh = SubResource("PlaneMesh_facfa")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+script = ExtResource("4_buec5")
+noclip = true
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+fov = 90.0
+script = ExtResource("1_0htb1")
+
+[node name="RayCast3D" type="RayCast3D" parent="CharacterBody3D/Camera3D"]
+target_position = Vector3(0, 0, -100)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_v7aaa")
+
+[node name="cube" parent="CharacterBody3D" instance=ExtResource("5_hxctm")]
+transform = Transform3D(0.53, 0, 0, 0, 0.53, 0, 0, 0, 0.53, 0, 0, 0)
+top_level = true
+
+[node name="Point" type="MeshInstance3D" parent="CharacterBody3D"]
+top_level = true
+mesh = SubResource("SphereMesh_0quuj")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_of70n")

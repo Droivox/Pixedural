@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dnp2md77k88r1"]
+
+[ext_resource type="Script" path="res://data/scripts/grass.gd" id="1_d68ph"]
+[ext_resource type="Shader" uid="uid://bgucs2tr5c7nq" path="res://data/shaders/grass.tres" id="1_jhq4j"]
+[ext_resource type="Texture2D" uid="uid://o6klg2rjp1dt" path="res://data/textures/grass_2d.png" id="2_q10pj"]
+[ext_resource type="Texture2D" uid="uid://ck2eaw8ac6pd1" path="res://data/textures/shadow.png" id="3_mrax0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iva0u"]
+render_priority = 0
+shader = ExtResource("1_jhq4j")
+shader_parameter/Grass = ExtResource("2_q10pj")
+
+[sub_resource type="QuadMesh" id="QuadMesh_jyudo"]
+size = Vector2(2, 2)
+
+[node name="Grass" type="Node3D"]
+script = ExtResource("1_d68ph")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("ShaderMaterial_iva0u")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_jyudo")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 1, 0)
+material_override = SubResource("ShaderMaterial_iva0u")
+cast_shadow = 0
+mesh = SubResource("QuadMesh_jyudo")
+
+[node name="Decal" type="Decal" parent="."]
+layers = 32
+size = Vector3(1, 1, 1)
+texture_albedo = ExtResource("3_mrax0")
+cull_mask = 1048574
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.562157, 0)
+target_position = Vector3(0, -2, 0)

@@ -1,0 +1,53 @@
+[gd_resource type="VisualShader" load_steps=4 format=3 uid="uid://cb34dt1i5ihxa"]
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_fglc3"]
+parameter_name = "Folhha"
+texture_filter = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_4qhwq"]
+output_port_for_preview = 0
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeUVFunc" id="VisualShaderNodeUVFunc_7gxre"]
+function = 1
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_disabled, diffuse_toon, specular_toon, depth_prepass_alpha;
+
+uniform sampler2D Folhha : filter_nearest;
+
+
+
+void fragment() {
+// UVFunc:6
+	vec2 n_in6p1 = vec2(1.00000, 1.00000);
+	vec2 n_in6p2 = vec2(0.00000, 0.00000);
+	vec2 n_out6p0 = (UV - n_in6p2) * n_in6p1 + n_in6p2;
+
+
+	vec4 n_out5p0;
+// Texture2D:5
+	n_out5p0 = texture(Folhha, n_out6p0);
+	float n_out5p4 = n_out5p0.a;
+
+
+// Output:0
+	ALBEDO = vec3(n_out5p0.xyz);
+	ALPHA = n_out5p4;
+
+
+}
+"
+modes/cull = 2
+modes/diffuse = 3
+modes/specular = 1
+flags/depth_prepass_alpha = true
+nodes/fragment/4/node = SubResource("VisualShaderNodeTexture2DParameter_fglc3")
+nodes/fragment/4/position = Vector2(-277.393, 311.411)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture_4qhwq")
+nodes/fragment/5/position = Vector2(60, 200)
+nodes/fragment/6/node = SubResource("VisualShaderNodeUVFunc_7gxre")
+nodes/fragment/6/position = Vector2(-240, 100)
+nodes/fragment/connections = PackedInt32Array(4, 0, 5, 2, 6, 0, 5, 0, 5, 0, 0, 0, 5, 4, 0, 1)

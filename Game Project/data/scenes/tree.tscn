@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://cgik75abbraki"]
+
+[ext_resource type="Shader" uid="uid://bgksdui8r6b8y" path="res://data/scenes/tree.tres" id="1_s1umw"]
+[ext_resource type="Texture2D" uid="uid://ududj0vqvr3p" path="res://data/textures/meshes.png" id="2_kptaf"]
+[ext_resource type="ArrayMesh" uid="uid://dsh840pefiir7" path="res://data/models/tree.obj" id="2_lpuqt"]
+[ext_resource type="Texture2D" uid="uid://ck2eaw8ac6pd1" path="res://data/textures/shadow.png" id="4_y5lek"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ge671"]
+render_priority = 0
+shader = ExtResource("1_s1umw")
+shader_parameter/Tree = ExtResource("2_kptaf")
+
+[node name="Tree" type="Node3D"]
+
+[node name="Tree" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_ge671")
+cast_shadow = 0
+mesh = ExtResource("2_lpuqt")
+
+[node name="Decal" type="Decal" parent="."]
+layers = 32
+size = Vector3(5, 5, 5)
+texture_albedo = ExtResource("4_y5lek")
+distance_fade_enabled = true
+cull_mask = 1048574

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://cqkqeoi0fi4ul"]
+
+[ext_resource type="Material" uid="uid://bp5gdts1bd48i" path="res://data/materials/water_new.material" id="1_kf6sc"]
+[ext_resource type="PackedScene" uid="uid://dhwbshseb4qix" path="res://data/scenes/fish.tscn" id="2_c65ye"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_36x54"]
+size = Vector2(16, 16)
+subdivide_width = 6
+subdivide_depth = 6
+
+[sub_resource type="BoxMesh" id="BoxMesh_bid3k"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_5yx8d"]
+size = Vector3(10, 1, 10)
+
+[node name="Water" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+layers = 33
+material_override = ExtResource("1_kf6sc")
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_36x54")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("BoxMesh_bid3k")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.971384, 0.237516, 0, -0.237516, 0.971384, 0, -0.454757, 1.23651)
+visible = false
+mesh = SubResource("BoxMesh_bid3k")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.971384, 0.237516, 0, -0.237516, 0.971384, 1.1026, -1.77097, 1.23651)
+visible = false
+mesh = SubResource("BoxMesh_5yx8d")
+
+[node name="Area3D" parent="." instance=ExtResource("2_c65ye")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.911216, 0)

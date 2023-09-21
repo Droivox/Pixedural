@@ -1,0 +1,62 @@
+[gd_resource type="VisualShader" load_steps=5 format=3 uid="uid://bgksdui8r6b8y"]
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_cpi1p"]
+parameter_name = "Tree"
+texture_type = 1
+color_default = 2
+texture_filter = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_3dfuo"]
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_jcyob"]
+constant = 1.0
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_exb5c"]
+constant = 1.0
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_toon, specular_toon, depth_prepass_alpha;
+
+uniform sampler2D Tree : source_color, hint_default_transparent, filter_nearest;
+
+
+
+void fragment() {
+	vec4 n_out3p0;
+// Texture2D:3
+	n_out3p0 = texture(Tree, UV);
+	float n_out3p4 = n_out3p0.a;
+
+
+// FloatConstant:4
+	float n_out4p0 = 1.000000;
+
+
+// FloatConstant:5
+	float n_out5p0 = 1.000000;
+
+
+// Output:0
+	ALBEDO = vec3(n_out3p0.xyz);
+	ALPHA = n_out3p4;
+	ROUGHNESS = n_out4p0;
+	SPECULAR = n_out5p0;
+
+
+}
+"
+modes/diffuse = 3
+modes/specular = 1
+flags/depth_prepass_alpha = true
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_cpi1p")
+nodes/fragment/2/position = Vector2(-655.191, 100.356)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_3dfuo")
+nodes/fragment/3/position = Vector2(-95.1914, 60.3565)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatConstant_jcyob")
+nodes/fragment/4/position = Vector2(60, 300)
+nodes/fragment/5/node = SubResource("VisualShaderNodeFloatConstant_exb5c")
+nodes/fragment/5/position = Vector2(120, 440)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 2, 3, 0, 0, 0, 3, 4, 0, 1, 4, 0, 0, 3, 5, 0, 0, 4)

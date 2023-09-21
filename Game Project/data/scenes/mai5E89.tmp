@@ -1,0 +1,113 @@
+[gd_scene load_steps=13 format=3 uid="uid://c0a3y1nmmq3ry"]
+
+[ext_resource type="Script" path="res://data/scripts/debug.gd" id="2_02dep"]
+[ext_resource type="Script" path="res://data/scripts/chunk.gd" id="2_dhg3x"]
+[ext_resource type="PackedScene" uid="uid://dgtt8w0m36am0" path="res://data/scenes/character.tscn" id="3_k1533"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3evxt"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_2gwim"]
+sky_material = SubResource("ProceduralSkyMaterial_3evxt")
+
+[sub_resource type="Environment" id="Environment_8mdmo"]
+background_mode = 1
+background_color = Color(0.4, 0.643137, 0.74902, 1)
+sky = SubResource("Sky_2gwim")
+ambient_light_source = 3
+sdfgi_use_occlusion = true
+fog_density = 0.03
+volumetric_fog_density = 0.03
+adjustment_enabled = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_x7ns7"]
+domain_warp_type = 2
+domain_warp_frequency = 2.89
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_cgye5"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_x7ns7")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kwo5x"]
+seed = 2
+fractal_gain = 0.7
+domain_warp_type = 2
+domain_warp_frequency = 2.89
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0bmxa"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_kwo5x")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jtutq"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dafw1"]
+width = 64
+height = 64
+noise = SubResource("FastNoiseLite_jtutq")
+
+[node name="main" type="Node"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.863285, -0.391913, 0.318032, 0.0688211, 0.532828, 0.84342, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_blur = 5.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8mdmo")
+
+[node name="Chunk" type="Node3D" parent="." node_paths=PackedStringArray("render")]
+script = ExtResource("2_dhg3x")
+generateWorld = true
+render = NodePath("Render")
+
+[node name="Chunks" type="Node3D" parent="Chunk"]
+
+[node name="Noises" type="Node" parent="Chunk"]
+
+[node name="normal" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 64)
+texture = SubResource("NoiseTexture2D_cgye5")
+
+[node name="mountain" type="Sprite2D" parent="Chunk/Noises"]
+position = Vector2(64, 136)
+texture = SubResource("NoiseTexture2D_0bmxa")
+
+[node name="Tree" type="Node" parent="Chunk"]
+
+[node name="normal" type="Sprite2D" parent="Chunk/Tree"]
+position = Vector2(64, 224)
+texture = SubResource("NoiseTexture2D_dafw1")
+
+[node name="Render" type="Marker3D" parent="Chunk"]
+
+[node name="debug" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_02dep")
+
+[node name="fps" type="Label" parent="debug"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 77.0
+offset_bottom = 33.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 20
+
+[node name="pos" type="Label" parent="debug"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 42.0
+offset_right = 77.0
+offset_bottom = 70.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 20
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("3_k1533")]

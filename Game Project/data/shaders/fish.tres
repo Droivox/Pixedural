@@ -1,0 +1,108 @@
+[gd_resource type="VisualShader" load_steps=9 format=3 uid="uid://itdv8e6ok3xm"]
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_dtww2"]
+parameter_name = "Grass"
+texture_type = 1
+color_default = 2
+texture_filter = 1
+texture_repeat = 1
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_jm5mn"]
+expanded_output_ports = [0]
+source = 5
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_44dax"]
+expanded_output_ports = [0]
+input_name = "vertex"
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_vejbh"]
+function = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_pc2s1"]
+input_name = "time"
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_lkagr"]
+operator = 2
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_ogog3"]
+expanded_output_ports = [0]
+input_name = "vertex"
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_llax3"]
+operator = 2
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_toon, specular_toon, depth_prepass_alpha;
+
+uniform sampler2D Grass : source_color, hint_default_transparent, filter_nearest, repeat_enable;
+
+
+
+void vertex() {
+// Input:15
+	vec3 n_out15p0 = VERTEX;
+	float n_out15p3 = n_out15p0.b;
+
+
+// Input:13
+	float n_out13p0 = TIME;
+
+
+// FloatFunc:12
+	float n_out12p0 = sin(n_out13p0);
+
+
+// FloatOp:16
+	float n_out16p0 = n_out15p3 * n_out12p0;
+
+
+// Input:11
+	vec3 n_out11p0 = VERTEX;
+
+
+// FloatOp:14
+	float n_out14p0 = n_out16p0 * n_out11p0.x;
+
+
+// Output:0
+	VERTEX = vec3(n_out14p0);
+
+
+}
+
+void fragment() {
+	vec4 n_out4p0;
+// Texture2D:4
+	n_out4p0 = texture(Grass, UV);
+	float n_out4p4 = n_out4p0.a;
+
+
+// Output:0
+	ALBEDO = vec3(n_out4p0.xyz);
+	ALPHA = n_out4p4;
+
+
+}
+"
+modes/diffuse = 3
+modes/specular = 1
+flags/depth_prepass_alpha = true
+nodes/vertex/11/node = SubResource("VisualShaderNodeInput_44dax")
+nodes/vertex/11/position = Vector2(-380, 280)
+nodes/vertex/12/node = SubResource("VisualShaderNodeFloatFunc_vejbh")
+nodes/vertex/12/position = Vector2(-460, 100)
+nodes/vertex/13/node = SubResource("VisualShaderNodeInput_pc2s1")
+nodes/vertex/13/position = Vector2(-760, 100)
+nodes/vertex/14/node = SubResource("VisualShaderNodeFloatOp_lkagr")
+nodes/vertex/14/position = Vector2(60, 180)
+nodes/vertex/15/node = SubResource("VisualShaderNodeInput_ogog3")
+nodes/vertex/15/position = Vector2(-340, -40)
+nodes/vertex/16/node = SubResource("VisualShaderNodeFloatOp_llax3")
+nodes/vertex/16/position = Vector2(-150.134, 117.678)
+nodes/vertex/connections = PackedInt32Array(13, 0, 12, 0, 12, 0, 16, 1, 11, 0, 14, 1, 14, 0, 0, 0, 16, 0, 14, 0, 15, 3, 16, 0)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture2DParameter_dtww2")
+nodes/fragment/3/position = Vector2(-440, 300)
+nodes/fragment/4/node = SubResource("VisualShaderNodeTexture_jm5mn")
+nodes/fragment/4/position = Vector2(0, 200)
+nodes/fragment/connections = PackedInt32Array(3, 0, 4, 2, 4, 0, 0, 0, 4, 4, 0, 1)
