@@ -9,6 +9,10 @@ var jumpHeight : float = 6.0;
 
 var input : Dictionary;
 
+var direction = Vector3();
+
+@export var camera : Camera3D;
+
 func _ready() -> void:
 	inputs();
 
@@ -32,6 +36,7 @@ func _physics_process(_delta) -> void:
 		$CollisionShape3D.disabled = true;
 	else:
 		movement(_delta);
+		_rotation(_delta);
 		$CollisionShape3D.disabled = false;
 
 func movementNoClip(_delta) -> void:
@@ -55,8 +60,18 @@ func movementNoClip(_delta) -> void:
 	
 	move_and_slide();
 
+func _rotation(_delta):
+	if input["left"]:
+		camera.global_rotation.z = lerp_angle(camera.global_rotation.z, deg_to_rad(5), 10 * _delta);
+	
+	if input["right"]:
+		camera.global_rotation.z = lerp_angle(camera.global_rotation.z, -deg_to_rad(5), 10 * _delta);
+	
+	if not input["left"] and not input["right"]:
+		camera.global_rotation.z = lerp_angle(camera.global_rotation.z, 0, 5 * _delta);
+
 func movement(_delta) -> void:
-	var direction = Vector3();
+	direction = Vector3();
 	
 	var bs = get_viewport().get_camera_3d().global_transform.basis;
 	direction += (-input["left"]    + input["right"]) * bs.x;

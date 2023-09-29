@@ -77,7 +77,7 @@ func generateTerrainHeight(_position : Vector3i) -> float:
 	
 	var snap = 1;
 	
-	var pos = Vector3(_position.x * snap, 0, _position.z * snap)
+	var pos = Vector3(_position.x * snap, 0, _position.z * snap);
 	
 	var height = {};
 	
@@ -155,7 +155,7 @@ func generateTree(_position, mesh) -> void:
 	
 	var pos = _position + Vector3(0, ht, 0);
 	
-	if TreeAreaNoise > 0.5 and treeDistanceNoise > 0.5 and pos.y > 0.1 and pos.y < 1.0:
+	if TreeAreaNoise > 0.4 and treeDistanceNoise > 0.5 and pos.y > 0.1 and pos.y < 1.0:
 		var tree = preTree.instantiate();
 		tree.position = pos;
 		mesh.call_deferred("add_child", tree);

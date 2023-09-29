@@ -1,13 +1,21 @@
-[gd_scene load_steps=13 format=3 uid="uid://dhwbshseb4qix"]
+[gd_scene load_steps=14 format=3 uid="uid://dhwbshseb4qix"]
 
 [ext_resource type="Shader" path="res://data/shaders/fish.gdshader" id="1_f5a31"]
 [ext_resource type="Script" path="res://data/scripts/fish.gd" id="1_xhk4x"]
 [ext_resource type="Texture2D" uid="uid://mi0qa2ytgsxv" path="res://data/models/Fish_0.png" id="3_hl7y4"]
 [ext_resource type="Texture2D" uid="uid://b6ax3ggr7ng47" path="res://data/models/fish_Image_0.png" id="4_5c3qc"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_f80y3"]
-subdivide_width = 10
-subdivide_depth = 10
+[sub_resource type="BoxShape3D" id="BoxShape3D_kgfiy"]
+size = Vector3(0.17486, 0.206335, 0.542068)
+
+[sub_resource type="SphereMesh" id="SphereMesh_c3t0d"]
+radius = 0.2
+height = 0.3
+radial_segments = 6
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pynyk"]
+albedo_color = Color(0.631373, 0, 0.243137, 1)
 
 [sub_resource type="Gradient" id="Gradient_brxxb"]
 interpolation_mode = 2
@@ -24,8 +32,6 @@ shader_parameter/range = 0.1
 shader_parameter/speed = 0.5
 shader_parameter/fish = ExtResource("3_hl7y4")
 shader_parameter/perlinNoise = SubResource("GradientTexture1D_5qbf6")
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_kgfiy"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0fdjj"]
 resource_name = "Material_0"
@@ -68,22 +74,34 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_sqgf2")
 
-[node name="Area3D" type="Area3D"]
+[node name="Fish" type="CharacterBody3D" node_paths=PackedStringArray("helper")]
 script = ExtResource("1_xhk4x")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-visible = false
-mesh = SubResource("QuadMesh_f80y3")
-surface_material_override/0 = SubResource("ShaderMaterial_frhjf")
+helper = NodePath("helper")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_kgfiy")
 
-[node name="back" type="RayCast3D" parent="."]
-target_position = Vector3(0, -0.5, 0)
+[node name="helper" type="Node3D" parent="."]
+top_level = true
+visible = false
 
-[node name="front" type="RayCast3D" parent="."]
-target_position = Vector3(0, 0, -0.8)
+[node name="Mesh" type="MeshInstance3D" parent="helper"]
+mesh = SubResource("SphereMesh_c3t0d")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_pynyk")
+
+[node name="Front" type="RayCast3D" parent="helper"]
+target_position = Vector3(0, 0, -1)
+
+[node name="Left" type="RayCast3D" parent="helper"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
+visible = false
+target_position = Vector3(0, 0, -2)
+
+[node name="Right" type="RayCast3D" parent="helper"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+visible = false
+target_position = Vector3(0, 0, -2)
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 3.0
@@ -97,5 +115,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09375, 0)
 material_override = SubResource("ShaderMaterial_frhjf")
 mesh = SubResource("ArrayMesh_kuvhi")
 skeleton = NodePath("")
-
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

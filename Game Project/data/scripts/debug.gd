@@ -3,7 +3,7 @@ extends Control
 func _process(_delta) -> void:
 	$fps.text = str(Engine.get_frames_per_second());
 	
-	var pos = $"../CharacterBody3D".global_position;
+	var pos = $"../Character".global_position;
 	pos.x = int(pos.x);
 	pos.y = int(pos.y);
 	pos.z = int(pos.z);

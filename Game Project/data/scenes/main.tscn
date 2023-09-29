@@ -77,10 +77,8 @@ height = 64
 noise = SubResource("FastNoiseLite_uqdmd")
 
 [sub_resource type="SphereMesh" id="SphereMesh_q6q5h"]
-radius = 300.0
-height = 600.0
-radial_segments = 32
-rings = 16
+radius = 1000.0
+height = 1000.0
 
 [node name="main" type="Node"]
 
@@ -161,7 +159,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 20
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("3_k1533")]
+[node name="Character" parent="." instance=ExtResource("3_k1533")]
 floor_max_angle = 1.39626
 
 [node name="skybox" type="Node3D" parent="."]
